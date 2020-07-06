@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.author       = package['author']
   s.platforms    = { :ios => "9.0", :tvos => "9.0" }
-  s.source       = { :git => "https://github.com/dooboolab/react-native-iap.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/javobal/react-native-iap.git", :tag => "4.4.5" }
   s.source_files = "ios/*.{h,m}"
   s.requires_arc = true
 
