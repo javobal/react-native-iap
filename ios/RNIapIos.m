@@ -591,6 +591,7 @@ RCT_EXPORT_METHOD(getPendingTransactions:(RCTPromiseResolveBlock)resolve
                          product.localizedTitle ? product.localizedTitle : @"", @"title",
                          product.localizedDescription ? product.localizedDescription : @"", @"description",
                          localizedPrice, @"localizedPrice",
+                         [product.priceLocale objectForKey: NSLocaleCountryCode], @"countryCode",
                          periodNumberIOS, @"subscriptionPeriodNumberIOS",
                          periodUnitIOS, @"subscriptionPeriodUnitIOS",
                          introductoryPrice, @"introductoryPrice",
