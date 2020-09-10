@@ -1,5 +1,21 @@
 ## Changelogs
 
+- **[4.5.3]**
+  - Ability to know when a SKPaymentTransactionStateDeferred purchase update occurs [#1080](https://github.com/dooboolab/react-native-iap/issues/1080).
+
+- **[4.5.2]**
+  - Fix promise not resolving on `ios14` [#1064](https://github.com/dooboolab/react-native-iap/pull/1064).
+
+- **[4.5.0]**
+  - Fix iap-promoted-product listener [#1039](https://github.com/dooboolab/react-native-iap/pull/1039)
+
+- **[4.4.11]**
+  - Fix regresion in `4.4.10`
+
+- **[4.4.10]**
+  - Fix iOS discount issue [#1038](https://github.com/dooboolab/react-native-iap/pull/1038)
+  - Fix return type of `getPromotedProductIOS` [#1037](https://github.com/dooboolab/react-native-iap/pull/1037)
+
 - **[4.4.9]**
   - Upgrade packages and expose `ProductPurchase` type.
 

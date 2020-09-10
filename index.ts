@@ -34,6 +34,7 @@ export enum IAPErrorCode {
   E_ALREADY_OWNED = 'E_ALREADY_OWNED',
   E_DEVELOPER_ERROR = 'E_DEVELOPER_ERROR',
   E_BILLING_RESPONSE_JSON_PARSE_ERROR = 'E_BILLING_RESPONSE_JSON_PARSE_ERROR',
+  E_DEFERRED_PAYMENT = 'E_DEFERRED_PAYMENT',
 }
 
 export enum ProrationModesAndroid {
@@ -539,7 +540,7 @@ export const consumePurchaseAndroid = (
  *   Indicates the the App Store purchase should continue from the app instead of the App Store.
  * @returns {Promise<Product>}
  */
-export const getPromotedProductIOS = (): Promise<Product> =>
+export const getPromotedProductIOS = (): Promise<string> =>
   Platform.select({
     ios: async () => {
       checkNativeiOSAvailable();
@@ -597,7 +598,7 @@ export const requestPurchaseWithOfferIOS = (
  * @returns {Promise<Apple.ReceiptValidationResponse | false>}
  */
 export const validateReceiptIos = async (
-  receiptBody: object,
+  receiptBody: Record<string, unknown>,
   isTest?: boolean,
 ): Promise<Apple.ReceiptValidationResponse | false> => {
   const url = isTest
@@ -637,7 +638,7 @@ export const validateReceiptAndroid = async (
   productToken: string,
   accessToken: string,
   isSub?: boolean,
-): Promise<object | false> => {
+): Promise<Record<string, unknown> | false> => {
   const type = isSub ? 'subscriptions' : 'products';
   const url =
     'https://www.googleapis.com/androidpublisher/v3/applications' +

@@ -122,7 +122,7 @@ _*deprecated_<br>~~`buySubscription(sku: string)`~~<ul><li>sku: subscription ID/
 `clearProductsIOS()`    | `void`            | **iOS only**<br>Clear all products and subscriptions.<br>Read more in below README.
 `getReceiptIOS()`   | `Promise<string>` | **iOS only**<br>Get the current receipt.
 `getPendingPurchasesIOS()` | `Promise<ProductPurchase[]>` | **IOS only**<br>Gets all the transactions which are pending to be finished.
-`validateReceiptIos(body: Object, devMode: boolean)`<ul><li>body: receiptBody</li><li>devMode: isTest</li></ul> | `Object\|boolean` | **iOS only**<br>Validate receipt.
+`validateReceiptIos(body: Record<string, unknown>, devMode: boolean)`<ul><li>body: receiptBody</li><li>devMode: isTest</li></ul> | `Object\|boolean` | **iOS only**<br>Validate receipt.
 `endConnection()` | `Promise<void>` | End billing connection.
 `consumeAllItemsAndroid()` | `Promise<void>` | **Android only**<br>Consume all items so they are able to buy again.
 `consumePurchaseAndroid(token: string, payload?: string)`<ul><li>token: purchase token</li><li>payload: developerPayload</li></ul>     | `void` | **Android only**<br>Finish a purchase. All purchases should be finished once you have delivered the purchased items. E.g. by recording the purchase in your database or on your server.
@@ -323,7 +323,7 @@ Purchase
 2. Purchases are inter-session `asynchronuous` meaning requests that are made may take several hours
    to complete and continue to exist even after the app has been closed or crashed.
 3. The purchase may be pending and hard to track what has been done ([example][issue-307-c1]).
-4. Thus the Billing Flow is an `event` pattern than a `callback` pattern.
+4. Thus the Billing Flow is an `event` pattern rather than a `callback` pattern.
 
 Once you have called `getProducts()`, and you have a valid response, you can call `requestPurchase()`.
 Subscribable products can be purchased just like consumable products and users
@@ -352,27 +352,27 @@ class RootComponent extends Component<*> {
       const receipt = purchase.transactionReceipt;
       if (receipt) {
         yourAPI.deliverOrDownloadFancyInAppPurchase(purchase.transactionReceipt)
-        .then((deliveryResult) => {
+        .then( async (deliveryResult) => {
           if (isSuccess(deliveryResult)) {
             // Tell the store that you have delivered what has been paid for.
             // Failure to do this will result in the purchase being refunded on Android and
             // the purchase event will reappear on every relaunch of the app until you succeed
             // in doing the below. It will also be impossible for the user to purchase consumables
-            // again untill you do this.
+            // again until you do this.
             if (Platform.OS === 'ios') {
-              RNIap.finishTransactionIOS(purchase.transactionId);
+              await RNIap.finishTransactionIOS(purchase.transactionId);
             } else if (Platform.OS === 'android') {
               // If consumable (can be purchased again)
-              RNIap.consumePurchaseAndroid(purchase.purchaseToken);
+              await RNIap.consumePurchaseAndroid(purchase.purchaseToken);
               // If not consumable
-              RNIap.acknowledgePurchaseAndroid(purchase.purchaseToken);
+              await RNIap.acknowledgePurchaseAndroid(purchase.purchaseToken);
             }
 
             // From react-native-iap@4.1.0 you can simplify above `method`. Try to wrap the statement with `try` and `catch` to also grab the `error` message.
             // If consumable (can be purchased again)
-            RNIap.finishTransaction(purchase, true);
+            await RNIap.finishTransaction(purchase, true);
             // If not consumable
-            RNIap.finishTransaction(purchase, false);
+            await RNIap.finishTransaction(purchase, false);
           } else {
             // Retry / conclude the purchase is fraudulent, etc...
           }
@@ -445,6 +445,8 @@ to record the purchase into your database before calling `consumePurchaseAndroid
 Non-consumable purchases need to be acknowledged on Android, or they will be automatically refunded after 
 a few days. Acknowledge a purchase when you have delivered it to your user by calling `acknowledgePurchaseAndroid()`.
 On iOS non-consumable purchases are finished automatically but this will change in the future so it is recommended that you prepare by simply calling `finishTransactionIOS()` on non-consumables as well.
+
+`finishTransaction()` works for both platforms and is recommended since version 4.1.0 or later. Equal to finishTransactionIOS + consumePurchaseAndroid and acknowledgePurchaseAndroid.
 
 Restoring Purchases
 -----------------------------------
@@ -669,7 +671,7 @@ Q & A
 
     1. Completed an effective "Agreements, Tax, and Banking."
     2. Setup sandbox testing account in "Users and Roles."
-    3. Signed into iOS device with sandbox account.
+    3. Signed into iOS device with sandbox account in "Settings / iTunes & App Stores".
     3. Set up three In-App Purchases with the following status:
         - Ready to Submit
         - Missing Metadata
