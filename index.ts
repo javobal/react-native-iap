@@ -102,6 +102,7 @@ export interface ProductPurchase {
   userIdAmazon?: string;
   userMarketplaceAmazon?: string;
   userJsonAmazon?: string;
+  transactionStateIOS?: number;
 }
 
 export interface PurchaseResult {

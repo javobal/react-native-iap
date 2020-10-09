@@ -728,7 +728,8 @@ RCT_EXPORT_METHOD(getPendingTransactions:(RCTPromiseResolveBlock)resolve
                                              transaction.transactionIdentifier, @"transactionId",
                                              transaction.payment.productIdentifier, @"productId",
                                              [receiptData base64EncodedStringWithOptions:0], @"transactionReceipt",
-                                             nil
+                                             transaction.transactionState, "@transactionStateIOS",
+                                             nil,
                                              ];
 
             // originalTransaction is available for restore purchase and purchase of cancelled/expired subscriptions
